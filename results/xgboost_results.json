@@ -1,0 +1,7 @@
+{
+  "model": "xgboost",
+  "n_seeds": 1,
+  "test_pr_auc_mean": 0.012978423336875704,
+  "test_roc_auc_mean": 0.7081654344337207,
+  "test_brier_mean": 0.009580262319622957
+}

@@ -1,0 +1,78 @@
+# =============================================================================
+# Sepsis TD-GRU Pipeline — Central Configuration
+# All hyperparameters, paths, and experimental knobs live here.
+# Notebooks/scripts read from this file via src.config.load_config().
+# =============================================================================
+
+paths:
+  # Edit this single line to point at your environment.
+  # Notebook 0 reads the raw cohort and writes filtered_cohort.parquet here.
+  data_root: "/content/drive/MyDrive/Clinical ML Architect: Sepsis-6H Pipeline"
+  raw_cohort: "final_cohort_3h - Work.csv.gz"
+  filtered_cohort: "final_cohort_3h_filtered.parquet"
+  tensor_dir: "tensors"
+  predictions_dir: "predictions"
+  figures_dir: "figures"
+  results_dir: "results"
+
+cohort:
+  bin_hours: 3.0                    # Width of each temporal bin
+  lookback_bins: 8                  # 8 * 3h = 24h lookback
+  prediction_horizon_hours: 6.0     # Predict sepsis within next 6 hours
+  min_runway_hours: 6.0             # Exclude POA / left-censored sepsis
+  min_stay_bins: 2                  # Exclude ultra-short stays (< 6h)
+
+features:
+  # The TRUE feature list backed by the parquet. 18 features total.
+  # Honesty over inflated counts — Q1 reviewers WILL check the code.
+  vitals: [heart_rate, map, resp_rate, spo2, temp]
+  labs: [creatinine, bilirubin, platelets, wbc, sodium, potassium, lactate]
+  derived_clinical: [urine_output, gcs_total]
+  binary_interventions: [vasopressor_active, mech_vent_active]
+  demographics: [age, gender]
+  static_severity: [sofa_first]
+  # Total = 5 + 7 + 2 + 2 + 2 + 1 = 19 (we drop sofa_first since it inflates AUROC by leakage)
+  drop_for_modeling: [sofa_first]
+
+split:
+  # Patient-level split fractions. Already encoded in 'split' column of parquet.
+  train: 0.70
+  val: 0.15
+  test: 0.15
+  random_seed: 42
+
+training:
+  hidden_size: 64
+  dropout: 0.4
+  batch_size: 512
+  max_epochs: 30
+  learning_rate: 2.0e-3
+  grad_clip_norm: 1.0
+  early_stopping_patience: 8
+  monitor: "val_pr_auc"
+
+# Asymmetric Temporal Penalty (ATP) loss hyperparameters.
+# These are now exposed for sensitivity analysis (Notebook 4 sweep).
+atp_loss:
+  focal_gamma: 1.5
+  temporal_decay_alpha: 0.5
+  horizon_hours: 6.0
+  # How to compute the positive class weight.
+  # 'sqrt' = sqrt(N_neg/N_pos) ~ 14.  Recommended for calibration.
+  # 'log'  = log(N_neg/N_pos)  ~ 5.   Conservative.
+  # 'full' = N_neg/N_pos       ~ 191. WARNING: destroys calibration.
+  pos_weight_method: "sqrt"
+
+# Multi-seed harness — each model is trained N times with different seeds.
+# Reported metrics are mean ± std across seeds.
+seeds: [42, 1337, 2024, 7, 99]
+
+# Bootstrap statistics
+bootstrap:
+  n_resamples: 2000          # Was 200. Now sufficient for p < 0.001.
+  random_seed: 12345
+  alpha: 0.05                 # 95% CI
+
+# Operational threshold for clinical utility tables
+clinical_utility:
+  target_sensitivity: 0.80

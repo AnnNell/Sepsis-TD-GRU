@@ -1,0 +1,9 @@
+Model,Best threshold,PhysioNet utility (normalised),95% CI
+XGBoost,0.2818,-0.0026,"[-0.0164, +0.0128]"
+Transformer (CT-PE),0.6641,-0.0001,"[-0.0141, +0.0164]"
+TD-GRU (proposed),0.5343,+0.0541,"[+0.0118, +0.0925]"
+TD-GRU + Weighted BCE (no ATP),0.1899,+0.0453,"[-0.0016, +0.0905]"
+Standard GRU,0.5350,+0.0428,"[+0.0018, +0.0826]"
+GRU-D (Che et al. 2018),0.5311,+0.0397,"[+0.0042, +0.0747]"
+Standard GRU + Δt-feat,0.5849,+0.0256,"[-0.0128, +0.0631]"
+1D-CNN,0.4823,+0.0241,"[-0.0259, +0.0708]"

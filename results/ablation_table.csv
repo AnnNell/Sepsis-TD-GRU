@@ -1,0 +1,5 @@
+Variant,PR-AUC,ROC-AUC,Brier
+TD-GRU + ATP (full),0.0174 ± 0.0007,0.7517 ± 0.0054,0.1052 ± 0.0174
+TD-GRU + Weighted BCE (no ATP),0.0188 ± 0.0019,0.7549 ± 0.0040,0.0123 ± 0.0020
+Standard GRU + ATP (no decay),0.0161 ± 0.0006,0.7398 ± 0.0064,0.1085 ± 0.0150
+Standard GRU + Δt-feat + ATP,0.0148 ± 0.0006,0.7379 ± 0.0055,0.1362 ± 0.0318
