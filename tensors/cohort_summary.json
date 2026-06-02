@@ -1,0 +1,30 @@
+{
+  "feature_cols": [
+    "heart_rate",
+    "map",
+    "resp_rate",
+    "spo2",
+    "temp",
+    "creatinine",
+    "bilirubin",
+    "platelets",
+    "wbc",
+    "sodium",
+    "potassium",
+    "lactate",
+    "urine_output",
+    "gcs_total",
+    "vasopressor_active",
+    "mech_vent_active",
+    "age",
+    "gender"
+  ],
+  "n_features": 18,
+  "n_train": 259499,
+  "prevalence_train": 0.005210039205849171,
+  "n_val": 54411,
+  "prevalence_val": 0.005476833786815405,
+  "n_test": 56108,
+  "prevalence_test": 0.005435945000499487,
+  "test_row_id_hash": "9affebf4248c63c9ed683f4f0e93e809"
+}
